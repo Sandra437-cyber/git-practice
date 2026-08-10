@@ -1,3 +1,6 @@
+from datetime import date
+
+
 def add_member():
     name = input("Enter member name: ")
     phone = input("Enter phone number: ")
@@ -52,9 +55,10 @@ def search_member():
 def record_contribution():
     name = input("Enter member name: ")
     amount = input("Enter contribution amount: ")
+    contribution_date = date.today().isoformat()
 
     with open("data/contributions.txt", "a") as file:
-        file.write(f"{name} | {amount}\n")
+        file.write(f"{name} | {amount} | {contribution_date}\n")
 
     print("Contribution recorded successfully.")
 
@@ -76,8 +80,10 @@ def view_contributions():
             print(f"{number}. {contribution.strip()}")
 
             parts = contribution.strip().split("|")
-            amount = float(parts[1].strip())
-            total += amount
+
+            if len(parts) >= 2:
+                amount = float(parts[1].strip())
+                total += amount
 
         print(f"\nTotal contributions: {total:.2f}")
 
@@ -100,14 +106,15 @@ def contribution_history():
         for contribution in contributions:
             parts = contribution.strip().split("|")
 
-            if len(parts) != 2:
+            if len(parts) < 2:
                 continue
 
             name = parts[0].strip()
             amount = float(parts[1].strip())
+            contribution_date = parts[2].strip() if len(parts) >= 3 else "Date unavailable"
 
             if search_name in name.lower():
-                print(f"{name} | {amount:.2f}")
+                print(f"{name} | {amount:.2f} | {contribution_date}")
                 total += amount
                 found = True
 
@@ -137,7 +144,7 @@ def dashboard():
         for contribution in contributions:
             parts = contribution.strip().split("|")
 
-            if len(parts) == 2:
+            if len(parts) >= 2:
                 total += float(parts[1].strip())
 
     except FileNotFoundError:
