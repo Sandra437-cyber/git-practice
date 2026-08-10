@@ -26,6 +26,29 @@ def list_members():
         print("No members found.")
 
 
+def search_member():
+    search_name = input("Enter member name to search: ").strip().lower()
+
+    try:
+        with open("data/members.txt", "r") as file:
+            members = file.readlines()
+
+        found = False
+
+        print("\n=== Search Results ===")
+
+        for member in members:
+            if search_name in member.lower():
+                print(member.strip())
+                found = True
+
+        if not found:
+            print("No member found.")
+
+    except FileNotFoundError:
+        print("No members found.")
+
+
 def record_contribution():
     name = input("Enter member name: ")
     amount = input("Enter contribution amount: ")
@@ -82,7 +105,7 @@ def main():
     elif choice == "2":
         list_members()
     elif choice == "3":
-        print("Member search coming soon.")
+        search_member()
     elif choice == "4":
         record_contribution()
     elif choice == "5":
