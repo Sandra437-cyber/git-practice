@@ -26,6 +26,16 @@ def list_members():
         print("No members found.")
 
 
+def record_contribution():
+    name = input("Enter member name: ")
+    amount = input("Enter contribution amount: ")
+
+    with open("data/contributions.txt", "a") as file:
+        file.write(f"{name} | {amount}\n")
+
+    print("Contribution recorded successfully.")
+
+
 def show_menu():
     print("\n=== ChamaFlow ===")
     print("1. Add member")
@@ -47,6 +57,8 @@ def main():
         list_members()
     elif choice == "3":
         print("Member search coming soon.")
+    elif choice == "4":
+        record_contribution()
     elif choice == "6":
         print("Goodbye!")
     else:
