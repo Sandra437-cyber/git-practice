@@ -120,6 +120,34 @@ def contribution_history():
         print("No contributions found.")
 
 
+def dashboard():
+    try:
+        with open("data/members.txt", "r") as file:
+            members = [member for member in file.readlines() if member.strip()]
+        member_count = len(members)
+    except FileNotFoundError:
+        member_count = 0
+
+    try:
+        with open("data/contributions.txt", "r") as file:
+            contributions = file.readlines()
+
+        total = 0
+
+        for contribution in contributions:
+            parts = contribution.strip().split("|")
+
+            if len(parts) == 2:
+                total += float(parts[1].strip())
+
+    except FileNotFoundError:
+        total = 0
+
+    print("\n=== ChamaFlow Dashboard ===")
+    print(f"Members: {member_count}")
+    print(f"Total contributions: {total:.2f}")
+
+
 def show_menu():
     print("\n=== ChamaFlow ===")
     print("1. Add member")
@@ -127,11 +155,13 @@ def show_menu():
     print("3. Member search")
     print("4. Record contribution")
     print("5. View contributions")
-    print("6. Exit")
-    print("7. Member contribution history")
+    print("6. Member contribution history")
+    print("7. Dashboard")
+    print("8. Exit")
 
 
 def main():
+    dashboard()
     show_menu()
 
     choice = input("Choose an option: ")
@@ -147,9 +177,11 @@ def main():
     elif choice == "5":
         view_contributions()
     elif choice == "6":
-        print("Goodbye!")
-    elif choice == "7":
         contribution_history()
+    elif choice == "7":
+        dashboard()
+    elif choice == "8":
+        print("Goodbye!")
     else:
         print("That feature is not available yet.")
 
