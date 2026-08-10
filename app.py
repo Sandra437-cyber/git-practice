@@ -155,6 +155,42 @@ def dashboard():
     print(f"Total contributions: {total:.2f}")
 
 
+def monthly_summary():
+    month = input("Enter month (YYYY-MM): ").strip()
+
+    try:
+        with open("data/contributions.txt", "r") as file:
+            contributions = file.readlines()
+
+        found = False
+        total = 0
+
+        print(f"\n=== Monthly Contribution Summary: {month} ===")
+
+        for contribution in contributions:
+            parts = contribution.strip().split("|")
+
+            if len(parts) < 3:
+                continue
+
+            name = parts[0].strip()
+            amount = float(parts[1].strip())
+            contribution_date = parts[2].strip()
+
+            if contribution_date.startswith(month):
+                print(f"{name} | {amount:.2f} | {contribution_date}")
+                total += amount
+                found = True
+
+        if found:
+            print(f"\nTotal for {month}: {total:.2f}")
+        else:
+            print("No contributions found for this month.")
+
+    except FileNotFoundError:
+        print("No contributions found.")
+
+
 def show_menu():
     print("\n=== ChamaFlow ===")
     print("1. Add member")
@@ -164,7 +200,8 @@ def show_menu():
     print("5. View contributions")
     print("6. Member contribution history")
     print("7. Dashboard")
-    print("8. Exit")
+    print("8. Monthly contribution summary")
+    print("9. Exit")
 
 
 def main():
@@ -188,6 +225,8 @@ def main():
     elif choice == "7":
         dashboard()
     elif choice == "8":
+        monthly_summary()
+    elif choice == "9":
         print("Goodbye!")
     else:
         print("That feature is not available yet.")
