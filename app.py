@@ -189,11 +189,19 @@ def dashboard():
     except FileNotFoundError:
         member_count = 0
 
+    total = get_total_contributions()
+
+    print("\n=== ChamaFlow Dashboard ===")
+    print(f"Members: {member_count}")
+    print(f"Total contributions: {total:.2f}")
+
+
+def get_total_contributions():
+    total = 0
+
     try:
         with open("data/contributions.txt", "r") as file:
             contributions = file.readlines()
-
-        total = 0
 
         for contribution in contributions:
             parts = contribution.strip().split("|")
@@ -205,11 +213,9 @@ def dashboard():
                     continue
 
     except FileNotFoundError:
-        total = 0
+        pass
 
-    print("\n=== ChamaFlow Dashboard ===")
-    print(f"Members: {member_count}")
-    print(f"Total contributions: {total:.2f}")
+    return total
 
 
 def monthly_summary():
@@ -257,6 +263,58 @@ def monthly_summary():
         print("No contributions found.")
 
 
+def contribution_summary():
+    try:
+        with open("data/contributions.txt", "r") as file:
+            contributions = file.readlines()
+    except FileNotFoundError:
+        print("No contributions found.")
+        return
+
+    member_totals = {}
+    total = 0
+
+    for contribution in contributions:
+        parts = contribution.strip().split("|")
+
+        if len(parts) < 2:
+            continue
+
+        name = parts[0].strip()
+
+        try:
+            amount = float(parts[1].strip())
+        except ValueError:
+            continue
+
+        member_key = name.lower()
+
+        if member_key not in member_totals:
+            member_totals[member_key] = {
+                "name": name,
+                "amount": 0
+            }
+
+        member_totals[member_key]["amount"] += amount
+        total += amount
+
+    if total == 0:
+        print("No contributions found.")
+        return
+
+    print("\n=== Contribution Summary ===")
+
+    for member in member_totals.values():
+        percentage = (member["amount"] / total) * 100
+        print(
+            f"{member['name']}: "
+            f"{member['amount']:.2f} "
+            f"({percentage:.2f}%)"
+        )
+
+    print(f"\nTotal contributions: {total:.2f}")
+
+
 def show_menu():
     print("\n=== ChamaFlow ===")
     print("1. Add member")
@@ -267,7 +325,8 @@ def show_menu():
     print("6. Member contribution history")
     print("7. Dashboard")
     print("8. Monthly contribution summary")
-    print("9. Exit")
+    print("9. Contribution summary")
+    print("10. Exit")
 
 
 def main():
@@ -293,6 +352,8 @@ def main():
     elif choice == "8":
         monthly_summary()
     elif choice == "9":
+        contribution_summary()
+    elif choice == "10":
         print("Goodbye!")
     else:
         print("That feature is not available yet.")
