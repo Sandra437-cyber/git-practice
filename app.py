@@ -85,6 +85,41 @@ def view_contributions():
         print("No contributions found.")
 
 
+def contribution_history():
+    search_name = input("Enter member name: ").strip().lower()
+
+    try:
+        with open("data/contributions.txt", "r") as file:
+            contributions = file.readlines()
+
+        found = False
+        total = 0
+
+        print("\n=== Member Contribution History ===")
+
+        for contribution in contributions:
+            parts = contribution.strip().split("|")
+
+            if len(parts) != 2:
+                continue
+
+            name = parts[0].strip()
+            amount = float(parts[1].strip())
+
+            if search_name in name.lower():
+                print(f"{name} | {amount:.2f}")
+                total += amount
+                found = True
+
+        if found:
+            print(f"\nTotal contributed: {total:.2f}")
+        else:
+            print("No contributions found for this member.")
+
+    except FileNotFoundError:
+        print("No contributions found.")
+
+
 def show_menu():
     print("\n=== ChamaFlow ===")
     print("1. Add member")
@@ -93,6 +128,7 @@ def show_menu():
     print("4. Record contribution")
     print("5. View contributions")
     print("6. Exit")
+    print("7. Member contribution history")
 
 
 def main():
@@ -112,6 +148,8 @@ def main():
         view_contributions()
     elif choice == "6":
         print("Goodbye!")
+    elif choice == "7":
+        contribution_history()
     else:
         print("That feature is not available yet.")
 
