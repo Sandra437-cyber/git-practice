@@ -40,11 +40,13 @@ def main():
 
     choice = input("Choose an option: ")
 
-    if choice == "1":
-        add_member()
-    elif choice == "2":
-        list_members()
-    elif choice == "5":
+   if choice == "1":
+    add_member()
+elif choice == "2":
+    list_members()
+elif choice == "3":
+    print("Member search coming soon.")
+elif choice == "5":
         print("Goodbye!")
     else:
         print("That feature is not available yet.")
