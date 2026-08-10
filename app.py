@@ -2,8 +2,16 @@ from datetime import date
 
 
 def add_member():
-    name = input("Enter member name: ")
-    phone = input("Enter phone number: ")
+    name = input("Enter member name: ").strip()
+    phone = input("Enter phone number: ").strip()
+
+    if not name:
+        print("Member name cannot be empty.")
+        return
+
+    if not phone:
+        print("Phone number cannot be empty.")
+        return
 
     with open("data/members.txt", "a") as file:
         file.write(f"{name} | {phone}\n")
@@ -32,6 +40,10 @@ def list_members():
 def search_member():
     search_name = input("Enter member name to search: ").strip().lower()
 
+    if not search_name:
+        print("Search name cannot be empty.")
+        return
+
     try:
         with open("data/members.txt", "r") as file:
             members = file.readlines()
@@ -53,12 +65,28 @@ def search_member():
 
 
 def record_contribution():
-    name = input("Enter member name: ")
-    amount = input("Enter contribution amount: ")
+    name = input("Enter member name: ").strip()
+
+    if not name:
+        print("Member name cannot be empty.")
+        return
+
+    amount_text = input("Enter contribution amount: ").strip()
+
+    try:
+        amount = float(amount_text)
+    except ValueError:
+        print("Invalid amount. Please enter a number.")
+        return
+
+    if amount <= 0:
+        print("Contribution amount must be greater than zero.")
+        return
+
     contribution_date = date.today().isoformat()
 
     with open("data/contributions.txt", "a") as file:
-        file.write(f"{name} | {amount} | {contribution_date}\n")
+        file.write(f"{name} | {amount:.2f} | {contribution_date}\n")
 
     print("Contribution recorded successfully.")
 
@@ -82,8 +110,11 @@ def view_contributions():
             parts = contribution.strip().split("|")
 
             if len(parts) >= 2:
-                amount = float(parts[1].strip())
-                total += amount
+                try:
+                    amount = float(parts[1].strip())
+                    total += amount
+                except ValueError:
+                    continue
 
         print(f"\nTotal contributions: {total:.2f}")
 
@@ -93,6 +124,10 @@ def view_contributions():
 
 def contribution_history():
     search_name = input("Enter member name: ").strip().lower()
+
+    if not search_name:
+        print("Member name cannot be empty.")
+        return
 
     try:
         with open("data/contributions.txt", "r") as file:
@@ -110,8 +145,15 @@ def contribution_history():
                 continue
 
             name = parts[0].strip()
-            amount = float(parts[1].strip())
-            contribution_date = parts[2].strip() if len(parts) >= 3 else "Date unavailable"
+
+            try:
+                amount = float(parts[1].strip())
+            except ValueError:
+                continue
+
+            contribution_date = (
+                parts[2].strip() if len(parts) >= 3 else "Date unavailable"
+            )
 
             if search_name in name.lower():
                 print(f"{name} | {amount:.2f} | {contribution_date}")
@@ -145,7 +187,10 @@ def dashboard():
             parts = contribution.strip().split("|")
 
             if len(parts) >= 2:
-                total += float(parts[1].strip())
+                try:
+                    total += float(parts[1].strip())
+                except ValueError:
+                    continue
 
     except FileNotFoundError:
         total = 0
@@ -157,6 +202,10 @@ def dashboard():
 
 def monthly_summary():
     month = input("Enter month (YYYY-MM): ").strip()
+
+    if len(month) != 7 or month[4] != "-":
+        print("Invalid month format. Use YYYY-MM.")
+        return
 
     try:
         with open("data/contributions.txt", "r") as file:
@@ -174,7 +223,12 @@ def monthly_summary():
                 continue
 
             name = parts[0].strip()
-            amount = float(parts[1].strip())
+
+            try:
+                amount = float(parts[1].strip())
+            except ValueError:
+                continue
+
             contribution_date = parts[2].strip()
 
             if contribution_date.startswith(month):
