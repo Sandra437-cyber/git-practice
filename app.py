@@ -40,11 +40,14 @@ def main():
 
     choice = input("Choose an option: ")
 
-    if choice == "1":
-        add_member()
-    elif choice == "2":
-        list_members()
-    elif choice == "5":
+  if choice == "1":
+    add_member()
+elif choice == "2":
+    list_members()
+elif choice == "3":
+    print("There are currently no member statistics.")
+elif choice == "5":
+    print("Goodbye!")
         print("Goodbye!")
     else:
         print("That feature is not available yet.")
