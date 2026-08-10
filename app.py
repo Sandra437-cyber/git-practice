@@ -36,6 +36,32 @@ def record_contribution():
     print("Contribution recorded successfully.")
 
 
+def view_contributions():
+    try:
+        with open("data/contributions.txt", "r") as file:
+            contributions = file.readlines()
+
+        if not contributions:
+            print("No contributions found.")
+            return
+
+        print("\n=== Contributions ===")
+
+        total = 0
+
+        for number, contribution in enumerate(contributions, start=1):
+            print(f"{number}. {contribution.strip()}")
+
+            parts = contribution.strip().split("|")
+            amount = float(parts[1].strip())
+            total += amount
+
+        print(f"\nTotal contributions: {total:.2f}")
+
+    except FileNotFoundError:
+        print("No contributions found.")
+
+
 def show_menu():
     print("\n=== ChamaFlow ===")
     print("1. Add member")
@@ -59,6 +85,8 @@ def main():
         print("Member search coming soon.")
     elif choice == "4":
         record_contribution()
+    elif choice == "5":
+        view_contributions()
     elif choice == "6":
         print("Goodbye!")
     else:
