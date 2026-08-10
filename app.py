@@ -30,9 +30,10 @@ def show_menu():
     print("\n=== ChamaFlow ===")
     print("1. Add member")
     print("2. List members")
-    print("3. Record contribution")
-    print("4. View contributions")
-    print("5. Exit")
+    print("3. Member search")
+    print("4. Record contribution")
+    print("5. View contributions")
+    print("6. Exit")
 
 
 def main():
@@ -40,13 +41,13 @@ def main():
 
     choice = input("Choose an option: ")
 
-   if choice == "1":
-    add_member()
-elif choice == "2":
-    list_members()
-elif choice == "3":
-    print("Member search coming soon.")
-elif choice == "5":
+    if choice == "1":
+        add_member()
+    elif choice == "2":
+        list_members()
+    elif choice == "3":
+        print("Member search coming soon.")
+    elif choice == "6":
         print("Goodbye!")
     else:
         print("That feature is not available yet.")
