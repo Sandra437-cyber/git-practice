@@ -13,6 +13,19 @@ def add_member():
         print("Phone number cannot be empty.")
         return
 
+    try:
+        with open("data/members.txt", "r") as file:
+            members = file.readlines()
+    except FileNotFoundError:
+        members = []
+
+    for member in members:
+        existing_name = member.split("|")[0].strip().lower()
+
+        if existing_name == name.lower():
+            print("Member already exists.")
+            return
+
     with open("data/members.txt", "a") as file:
         file.write(f"{name} | {phone}\n")
 
@@ -111,8 +124,7 @@ def view_contributions():
 
             if len(parts) >= 2:
                 try:
-                    amount = float(parts[1].strip())
-                    total += amount
+                    total += float(parts[1].strip())
                 except ValueError:
                     continue
 
